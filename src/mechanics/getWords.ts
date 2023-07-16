@@ -13,13 +13,11 @@ const getWord = (words: string[]) => {
     return words[index];
 }
 
-const wordsPerPage = 100;
-
-export const getWords = (mode: string): string[] => {
+export const getWords = (mode: string, numWords: number): string[] => {
     const words = wordList[modes[mode]];
     const randomWords = [];
     
-    for (let i=0; i < wordsPerPage; i++) {
+    for (let i=0; i < numWords; i++) {
         randomWords.push(getWord(words));
     }
 

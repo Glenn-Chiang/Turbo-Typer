@@ -3,78 +3,77 @@ import React, { useState, useEffect } from "react";
 type props = {
   gameActive: boolean;
   startGame: () => void;
-  chars: string[];
-  charIndex: number;
-  setCharIndex: React.Dispatch<React.SetStateAction<number>>
-  evaluatedChars: number[];
-  setEvaluatedChars: React.Dispatch<React.SetStateAction<number[]>>;
+  words: string[];
+  wordsPerPage: number;
+  startIndex: number;
+  charGrades: number[];
+  setCharGrades: React.Dispatch<React.SetStateAction<number[]>>;
+  loadWords: () => void;
 };
 
 export default function GameWindow({
   gameActive,
   startGame,
-  chars,
-  charIndex,
-  setCharIndex,
-  evaluatedChars,
-  setEvaluatedChars,
+  words,
+  wordsPerPage,
+  startIndex,
+  charGrades,
+  setCharGrades,
+  loadWords
 }: props) {
   
+  const chars = words.join(' ').split(''); // Array of all characters including spaces
+  const displayedWords = words.slice(startIndex, startIndex + wordsPerPage);
+  const displayedChars = displayedWords.join(' ').split('')
+  const charIndex = charGrades.length;
   const currentChar = chars[charIndex];
 
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
+      // Ignore keys that are neither a character nor backspace
       if (event.key.length !== 1 && event.key !== "Backspace") {
         return;
       }
 
+      // Start game once user starts typing
       if (!gameActive) {
         startGame();
       }
 
       // Backspace
       if (event.key === "Backspace") {
-        setEvaluatedChars((prev) => {
-          const next = [...prev];
-          next[charIndex - 1] = 0;
-          return next;
-        });
-        setCharIndex(charIndex - 1);
+        // Ignore backspace if already at first character
+        if (charIndex === 0) {
+          return;
+        }
+        setCharGrades(charGrades.slice(0, charGrades.length - 1));
 
-        // Correct
+      // Correct
       } else if (event.key === currentChar) {
-        setEvaluatedChars((prev) => {
-          const next = [...prev];
-          next[charIndex] = 1;
-          return next;
-        });
-        setCharIndex(charIndex + 1);
+        setCharGrades([...charGrades, 1]);
 
-        // Incorrect
+      // Incorrect 
       } else {
-        setEvaluatedChars((prev) => {
-          const next = [...prev];
-          next[charIndex] = -1;
-          return next;
-        });
-        setCharIndex(charIndex + 1);
+        setCharGrades([...charGrades, 0]);
       }
 
-      console.log(charIndex);
+      if (charIndex === chars.length - 1) {
+        loadWords();
+      }
     };
 
     window.addEventListener("keydown", handleKeydown);
     return () => window.removeEventListener("keydown", handleKeydown);
-  }, [gameActive, charIndex, currentChar, evaluatedChars]);
+  }, [gameActive, charIndex, currentChar, charGrades]);
 
-  const charSpans = chars.map((char, index) => {
+  const charSpans = displayedChars.map((char, index) => {
     return (
       <span
         key={index}
         className={
-          evaluatedChars[index] === 1
+          charGrades[index + chars.length - displayedChars.length] === 1
             ? "text-white underline"
-            : evaluatedChars[index] === -1
+            : charGrades[index + chars.length - displayedChars.length] === 0
             ? "text-red-500 underline"
             : "text-sky-400"
         }

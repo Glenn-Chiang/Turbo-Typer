@@ -28,7 +28,7 @@ export default function SelectDropdown({id, options, defaultValue, setOption, en
         id={id} 
         defaultValue={defaultValue} 
         onChange={event => setOption(event.target.value)} 
-        className="text-sky-900"
+        className="text-sky-900 rounded"
         disabled={!enabled}
       >
         {optionsElems}

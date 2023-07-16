@@ -17,11 +17,8 @@ export default function Home() {
   type GameState = "pre-game" | "in-game" | "post-game";
   const [gameState, setGameState] = useState<GameState>("pre-game");
 
-  type Mode = "standard" | "advanced" | "expert";
-  const [mode, setMode] = useState<Mode>("standard");
-
-  type TimeLimit = "30" | "60" | "120";
-  const [timeLimit, setTimeLimit] = useState<TimeLimit>("30");
+  const [mode, setMode] = useState("standard");
+  const [timeLimit, setTimeLimit] = useState("30");
 
   const startGame = () => {
     setGameState("in-game");
@@ -32,16 +29,21 @@ export default function Home() {
   };
 
   const resetGame = () => {
-    setWords(getWords(mode));
-    setCharIndex(0);
-    setEvaluatedChars(chars.map(() => 0));
+    setWords(getWords(mode, wordsPerPage));    
+    setStartIndex(0);
+    setCharGrades([]);
     setGameState("pre-game");
   };
 
-  const [words, setWords] = useState(getWords(mode));
-  const [charIndex, setCharIndex] = useState(0);
-  const chars = words.join(" ").split("");
-  const [evaluatedChars, setEvaluatedChars] = useState(chars.map(() => 0)); // 1: correct, -1: incorrect, 0: not evaluated
+  const loadWords = () => {
+    setWords([...words, ...getWords(mode, wordsPerPage)]);
+    setStartIndex(startIndex + wordsPerPage);
+  };
+
+  const wordsPerPage = 10;
+  const [words, setWords] = useState(getWords(mode, wordsPerPage));
+  const [startIndex, setStartIndex] = useState(0);
+  const [charGrades, setCharGrades] = useState<number[]>([]);
 
   return (
     <div className="flex flex-col items-center">
@@ -51,30 +53,35 @@ export default function Home() {
         <FontAwesomeIcon icon={faKeyboard} />
       </h1>
       <Settings
-        enabled={gameState !== "in-game"}
+        enabled={gameState === "pre-game"}
         setMode={setMode}
         setTimeLimit={setTimeLimit}
       />
-      <div className="flex justify-center p-4">
-        {gameState !== "pre-game" ? <RestartButton onClick={resetGame}/> : null}
-      </div>
       <Timer
         gameActive={gameState === "in-game"}
         endGame={endGame}
         timeLimit={Number(timeLimit)}
       />
       {gameState === "pre-game" && <p className="p-4">Start typing to begin</p>}
+
+      {gameState !== "pre-game" ? (
+        <div className="p-4">
+          <RestartButton onClick={resetGame} />
+        </div>
+      ) : null}
+
       {gameState === "post-game" ? (
-        <Result evaluatedChars={evaluatedChars}/>
+        <Result charGrades={charGrades} timeLimit={Number(timeLimit)} />
       ) : (
         <GameWindow
           gameActive={gameState === "in-game"}
           startGame={startGame}
-          chars={chars}
-          charIndex={charIndex}
-          setCharIndex={setCharIndex}
-          evaluatedChars={evaluatedChars}
-          setEvaluatedChars={setEvaluatedChars}
+          words={words}
+          wordsPerPage={wordsPerPage}
+          startIndex={startIndex}
+          charGrades={charGrades}
+          setCharGrades={setCharGrades}
+          loadWords={loadWords}
         />
       )}
     </div>
