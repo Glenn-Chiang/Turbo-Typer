@@ -40,7 +40,9 @@ export default function Home() {
     setStartIndex(startIndex + wordsPerPage);
   };
 
-  const wordsPerPage = 10;
+  const linesPerPage = 4;
+  const wordsPerLine = 10;
+  const wordsPerPage = 50;
   const [words, setWords] = useState(getWords(mode, wordsPerPage));
   const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);

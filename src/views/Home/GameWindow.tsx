@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 type props = {
   gameActive: boolean;
@@ -84,6 +84,8 @@ export default function GameWindow({
   });
 
   return (
-    <div className="w-4/6 bg-sky-800 text-xl p-4 rounded-xl">{charSpans}</div>
+    <div className="w-4/6 bg-sky-800 text-xl p-4 rounded-xl">
+      {charSpans}
+    </div>
   );
 }
