@@ -16,17 +16,18 @@ export default function GameWindow({
   startGame,
   words,
   wordsPerPage,
-  startIndex,
+  startIndex: firstWordIndex,
   charGrades,
   setCharGrades,
   loadWords
 }: props) {
   
   const chars = words.join(' ').split(''); // Array of all characters including spaces
-  const displayedWords = words.slice(startIndex, startIndex + wordsPerPage);
-  const displayedChars = displayedWords.join(' ').split('')
-  const charIndex = charGrades.length;
-  const currentChar = chars[charIndex];
+  const displayedWords = words.slice(firstWordIndex, firstWordIndex + wordsPerPage);
+  const displayedChars = displayedWords.join(' ').split('');
+  const currentCharIndex = charGrades.length;
+  const currentChar = chars[currentCharIndex];
+  const firstCharIndex = chars.length - displayedChars.length;
 
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
@@ -43,7 +44,7 @@ export default function GameWindow({
       // Backspace
       if (event.key === "Backspace") {
         // Ignore backspace if already at first character
-        if (charIndex === 0) {
+        if (currentCharIndex === 0 || currentCharIndex === firstCharIndex) {
           return;
         }
         setCharGrades(charGrades.slice(0, charGrades.length - 1));
@@ -57,23 +58,23 @@ export default function GameWindow({
         setCharGrades([...charGrades, 0]);
       }
 
-      if (charIndex === chars.length - 1) {
+      if (currentCharIndex === chars.length - 1) {
         loadWords();
       }
     };
 
     window.addEventListener("keydown", handleKeydown);
     return () => window.removeEventListener("keydown", handleKeydown);
-  }, [gameActive, charIndex, currentChar, charGrades]);
+  }, [gameActive, currentCharIndex, currentChar, charGrades]);
 
   const charSpans = displayedChars.map((char, index) => {
     return (
       <span
         key={index}
         className={
-          charGrades[index + chars.length - displayedChars.length] === 1
+          charGrades[index + firstCharIndex] === 1
             ? "text-white underline"
-            : charGrades[index + chars.length - displayedChars.length] === 0
+            : charGrades[index + firstCharIndex] === 0
             ? "text-red-500 underline"
             : "text-sky-400"
         }

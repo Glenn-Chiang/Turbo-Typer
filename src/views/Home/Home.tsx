@@ -1,9 +1,7 @@
 import {
   faBoltLightning,
   faKeyboard,
-  faPlayCircle,
   faRefresh,
-  faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Settings from "./Settings";
@@ -52,8 +50,8 @@ export default function Home() {
   }
 
   const linesPerPage = 4;
-  const wordsPerLine = 10;
-  const wordsPerPage = 50;
+  const wordsPerLine = 10; 
+  const wordsPerPage = 10;
   const [words, setWords] = useState(getWords(mode, wordsPerPage));
   const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);
