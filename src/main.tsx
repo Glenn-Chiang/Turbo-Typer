@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import Home from './views/Home/Home.tsx'
 import Stats from './views/Stats/Stats.tsx'
 import Login from './views/Login/Login.tsx'
@@ -16,6 +16,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
+        element: <Navigate to={'/play'}/>
+      },
+      {
+        path: '/play',
         element: <Home/>
       },
       {

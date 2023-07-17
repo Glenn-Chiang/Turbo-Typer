@@ -1,12 +1,5 @@
+import { modes } from "../constants/parameters";
 import { wordList } from "../constants/wordsList";
-
-const modes: {
-    [key: string]: number
-  } = {
-    standard: 100,
-    advanced: 500,
-    expert: 1000
-  }
 
 const getWord = (words: string[]) => {
     const index =  Math.floor(Math.random() * words.length);

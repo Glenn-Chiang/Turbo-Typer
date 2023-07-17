@@ -12,13 +12,14 @@ import { getWords } from "../../mechanics/getWords.js";
 import Timer from "./Timer.js";
 import GameWindow from "./GameWindow.js";
 import Result from "./Result.js";
+import { modes, timeLimits } from "../../constants/parameters.js";
 
 export default function Home() {
   type GameState = "pre-game" | "in-game" | "post-game";
   const [gameState, setGameState] = useState<GameState>("pre-game");
 
-  const [mode, setMode] = useState("standard");
-  const [timeLimit, setTimeLimit] = useState("30");
+  const [mode, setMode] = useState(Object.keys(modes)[0]);
+  const [timeLimit, setTimeLimit] = useState(timeLimits[0]);
 
   const startGame = () => {
     setGameState("in-game");
@@ -40,6 +41,16 @@ export default function Home() {
     setStartIndex(startIndex + wordsPerPage);
   };
 
+  // When user selects different mode, load new set of words 
+  const updateMode = (mode: string) => {
+    setMode(mode);
+    setWords(getWords(mode, wordsPerPage));
+  }
+
+  const updateTimeLimit = (time: string) => {
+    setTimeLimit(Number(time));
+  }
+
   const linesPerPage = 4;
   const wordsPerLine = 10;
   const wordsPerPage = 50;
@@ -56,8 +67,8 @@ export default function Home() {
       </h1>
       <Settings
         enabled={gameState === "pre-game"}
-        setMode={setMode}
-        setTimeLimit={setTimeLimit}
+        updateMode={updateMode}
+        updateTimeLimit={updateTimeLimit}
       />
       <Timer
         gameActive={gameState === "in-game"}

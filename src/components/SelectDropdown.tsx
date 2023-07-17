@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type props = {
   id: 'mode' | 'time limit';
-  options: string[];
+  options: string[] | number[];
   defaultValue: string;
-  setOption: React.Dispatch<React.SetStateAction<string>>;
+  handleSelect: (mode: string) => void;
   enabled: boolean;
 }
 
-export default function SelectDropdown({id, options, defaultValue, setOption, enabled}: props) {
+export default function SelectDropdown({id, options, defaultValue, handleSelect, enabled}: props) {
   const optionsElems = options.map((option, index) => {
     return (
       <option key={index} value={option}>
@@ -27,8 +27,8 @@ export default function SelectDropdown({id, options, defaultValue, setOption, en
       <select 
         id={id} 
         defaultValue={defaultValue} 
-        onChange={event => setOption(event.target.value)} 
-        className="text-sky-900 rounded"
+        onChange={event => handleSelect(event.target.value)} 
+        className="text-sky-900 rounded capitalize"
         disabled={!enabled}
       >
         {optionsElems}

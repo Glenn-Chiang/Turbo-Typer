@@ -1,5 +1,8 @@
 import { faBarsProgress, faClock, faLineChart, faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { modes, timeLimits } from "../../constants/parameters";
+import SettingButton from "./SettingButton";
+import { useState } from "react";
 
 export default function Stats() {
   return (
@@ -15,21 +18,23 @@ export default function Stats() {
 
 
 function Overview() {
-  const modes = ['standard', 'advanced', 'expert'];
-  const modeButtons = modes.map((mode, index) => {
+
+  const [selectedMode, setSelectedMode] = useState(Object.keys(modes)[0]);
+  const [selectedTime, setSelectedTime] = useState(timeLimits[0]);
+
+  const modeButtons = Object.keys(modes).map((mode, index) => {
     return (
-      <button key={index} className="w-1/3 bg-cyan-500 rounded-xl p-2">
+      <SettingButton key={index} onClick={() => setSelectedMode(mode)} selected={mode === selectedMode}>
         {mode}
-      </button>
+      </SettingButton>
     )
   })
 
-  const timeLimits = [30,60,120];
   const timeButtons = timeLimits.map((time, index) => {
     return (
-      <button key={index} className="w-1/3 bg-cyan-500 rounded-xl p-2">
+      <SettingButton key={index} onClick={() => setSelectedTime(time)} selected={time === selectedTime}>
         {time}
-      </button>
+      </SettingButton>
     )
   })
 
@@ -37,7 +42,7 @@ function Overview() {
   const averageScore = 98;
 
   return (
-    <div className="w-4/6 bg-sky-950 p-4 rounded-xl flex">
+    <div className="w-4/6 bg-sky-950 p-4 rounded-xl flex gap-4">
       <div>
         <FontAwesomeIcon icon={faBarsProgress}/>
         Mode
