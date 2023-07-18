@@ -1,41 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getFirstLines, getLine } from "../../mechanics/getLine";
 
 type props = {
   gameActive: boolean;
   startGame: () => void;
-  mode: string;
-  words: string[];
+  currentLines: string[];
+  charsHistory: string;
   charGrades: number[];
   setCharGrades: React.Dispatch<React.SetStateAction<number[]>>;
+  loadNextLine: () => void;
 };
 
 export default function GameWindow({
   gameActive,
   startGame,
-  mode,
-  words,
+  currentLines,
+  charsHistory,
   charGrades,
   setCharGrades,
+  loadNextLine,
 }: props) {
-  const maxCharsPerLine = 50;
-  const linesPerPage = 3;
-
-  const initialLines = getFirstLines(linesPerPage, words, maxCharsPerLine);
-  const [linesHistory, setLinesHistory] = useState<string[]>(initialLines); // All lines rendered so far
-
-  // Reload words when user changes mode
-  useEffect(() => {
-    setLinesHistory(initialLines);
-  }, [mode]);
-
-  const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
-  const currentLines = linesHistory.slice(
-    startLineIndex,
-    startLineIndex + linesPerPage
-  ); // Lines currently rendered
-  const charsHistory = linesHistory.join(""); // All chars rendered so far
-  const numWords = charsHistory.split(" ").length; // Number of words rendered so far
   const currentChars = currentLines.join(""); // Chars currently rendered
   const firstCharIndex = charsHistory.length - currentChars.length; // Index of first char currently displayed
 
@@ -73,9 +56,7 @@ export default function GameWindow({
 
       // Load new line of words when user types last character of first line
       if (currentCharIndex === firstCharIndex + currentLines[0].length - 1) {
-        const nextLine = getLine(words, numWords, maxCharsPerLine);
-        setLinesHistory([...linesHistory, nextLine]);
-        setStartLineIndex(startLineIndex + 1);
+        loadNextLine();
       }
     };
 

@@ -1,18 +1,19 @@
 import {
   faBoltLightning,
   faKeyboard,
-  faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Settings from "./Settings";
+import Settings from "./Settings.js";
 import { useState } from "react";
 import { getWords } from "../../mechanics/getWords.js";
 import Timer from "./Timer.js";
 import GameWindow from "./GameWindow.js";
 import Result from "./Result.js";
 import { modes, timeLimits } from "../../constants/parameters.js";
+import { getFirstLines, getLine } from "../../mechanics/getLine.js";
+import RestartButton from "./RestartButton.js";
 
-export default function Home() {
+export default function Play() {
   type GameState = "pre-game" | "in-game" | "post-game";
   const [gameState, setGameState] = useState<GameState>("pre-game");
 
@@ -29,7 +30,8 @@ export default function Home() {
 
   const resetGame = () => {
     setWords(getWords(mode, chunkSize));
-    setStartIndex(0);
+    setStartLineIndex(0);
+    setLinesHistory(initialLines);
     setCharGrades([]);
     setGameState("pre-game");
   };
@@ -38,27 +40,43 @@ export default function Home() {
   const updateMode = (mode: string) => {
     setMode(mode);
     setWords(getWords(mode, chunkSize));
+    setLinesHistory(initialLines);
   };
 
   const updateTimeLimit = (time: string) => {
     setTimeLimit(Number(time));
   };
 
-  // Load new set of words when user finishes typing current set of words
-  const loadWords = () => {
-    setWords([...words, ...getWords(mode, chunkSize)]);
-    setStartIndex(startIndex + chunkSize);
-  };
-  
   const chunkSize = 100;
   const [words, setWords] = useState(getWords(mode, chunkSize));
-  const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);
+
+  const maxCharsPerLine = 50;
+  const linesPerPage = 3;
+
+  const initialLines = getFirstLines(linesPerPage, words, maxCharsPerLine);
+  const [linesHistory, setLinesHistory] = useState<string[]>(initialLines); // All lines rendered so far
+  const charsHistory = linesHistory.join("")
+  const numWords = charsHistory.split(" ").length;
   
-  if (charGrades.length >= words.join(" ").length / 2) {
-    loadWords();
+  const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
+
+  const currentLines = linesHistory.slice(
+    startLineIndex,
+    startLineIndex + linesPerPage
+  ); // Lines currently rendered
+
+  function loadNextLine() {
+    const nextLine = getLine(words, numWords, maxCharsPerLine);
+    setLinesHistory([...linesHistory, nextLine]);
+    setStartLineIndex(startLineIndex + 1);
   }
-  
+
+  // Load next chunk of words
+  if (charGrades.length >= words.join(" ").length / 2) {
+    setWords([...words, ...getWords(mode, chunkSize)]);
+  }
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-white text-6xl p-12 flex gap-4 items-center">
@@ -91,27 +109,13 @@ export default function Home() {
         <GameWindow
           gameActive={gameState === "in-game"}
           startGame={startGame}
-          mode={mode}
-          words={words}
+          currentLines={currentLines}
+          charsHistory={charsHistory}
           charGrades={charGrades}
           setCharGrades={setCharGrades}
+          loadNextLine={loadNextLine}
         />
       )}
     </div>
-  );
-}
-
-type RestartButtonProps = {
-  onClick: () => void;
-};
-
-function RestartButton({ onClick }: RestartButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      className="bg-red-500 w-12 text-white p-2 text-2xl rounded-xl hover:bg-red-400 transition"
-    >
-      <FontAwesomeIcon icon={faRefresh} />
-    </button>
   );
 }

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
-import Home from './views/Home/Home.tsx'
+import Play from './views/Play/Play.tsx'
 import Stats from './views/Stats/Stats.tsx'
 import Login from './views/Login/Login.tsx'
 import Register from './views/Register/Register.tsx'
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/play',
-        element: <Home/>
+        element: <Play/>
       },
       {
         path: '/stats',
