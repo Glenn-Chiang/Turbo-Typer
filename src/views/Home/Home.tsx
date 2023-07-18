@@ -34,12 +34,6 @@ export default function Home() {
     setGameState("pre-game");
   };
 
-  // Load new set of words when user finishes typing current set of words
-  const loadWords = () => {
-    setWords([...words, ...getWords(mode, chunkSize)]);
-    setStartIndex(startIndex + chunkSize);
-  };
-
   // When user selects different mode, load new set of words
   const updateMode = (mode: string) => {
     setMode(mode);
@@ -50,11 +44,20 @@ export default function Home() {
     setTimeLimit(Number(time));
   };
 
-  const sampleLines = ['line one', 'line two', 'line three'];
+  // Load new set of words when user finishes typing current set of words
+  const loadWords = () => {
+    setWords([...words, ...getWords(mode, chunkSize)]);
+    setStartIndex(startIndex + chunkSize);
+  };
+
   const chunkSize = 100;
   const [words, setWords] = useState(getWords(mode, chunkSize));
   const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);
+
+  if (charGrades.length >= words.join(' ').length / 2) {
+    loadWords();
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -73,13 +76,14 @@ export default function Home() {
         endGame={endGame}
         timeLimit={Number(timeLimit)}
       />
-      {gameState === "pre-game" && <p className="p-4">Start typing to begin</p>}
 
-      {gameState !== "pre-game" ? (
-        <div className="p-4">
+      <div className="h-20">
+        {gameState === "pre-game" ? (
+          <p className="p-4">Start typing to begin</p>
+        ) : (
           <RestartButton onClick={resetGame} />
-        </div>
-      ) : null}
+        )}
+      </div>
 
       {gameState === "post-game" ? (
         <Result charGrades={charGrades} timeLimit={Number(timeLimit)} />
@@ -87,13 +91,9 @@ export default function Home() {
         <GameWindow
           gameActive={gameState === "in-game"}
           startGame={startGame}
-          sampleLines={sampleLines}
           words={words}
-          wordsPerPage={chunkSize}
-          startIndex={startIndex}
           charGrades={charGrades}
           setCharGrades={setCharGrades}
-          loadWords={loadWords}
         />
       )}
     </div>

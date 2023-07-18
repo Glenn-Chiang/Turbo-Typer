@@ -4,13 +4,9 @@ import { getFirstLines, getLine } from "../../mechanics/getLine";
 type props = {
   gameActive: boolean;
   startGame: () => void;
-  sampleLines: string[];
   words: string[];
-  wordsPerPage: number;
-  startIndex: number;
   charGrades: number[];
   setCharGrades: React.Dispatch<React.SetStateAction<number[]>>;
-  loadWords: () => void;
 };
 
 export default function GameWindow({
@@ -19,22 +15,25 @@ export default function GameWindow({
   words,
   charGrades,
   setCharGrades,
-  loadWords,
 }: props) {
-  const maxCharsPerLine = 20;
+  const maxCharsPerLine = 50;
   const linesPerPage = 3;
 
-  const [linesHistory, setLinesHistory] = useState<string[]>(
+  const [linesHistory, setLinesHistory] = useState<string[]>( // All lines rendered so far
     getFirstLines(linesPerPage, words, maxCharsPerLine)
   );
-  const [startLineIndex, setStartLineIndex] = useState(0);
-  const currentLines = linesHistory.slice(startLineIndex, startLineIndex + linesPerPage);
+  const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
+  const currentLines = linesHistory.slice(
+    startLineIndex,
+    startLineIndex + linesPerPage
+  ); // Lines currently rendered
   const charsHistory = linesHistory.join(""); // All chars rendered so far
-  const numWords = charsHistory.split(" ").length;
+  const numWords = charsHistory.split(" ").length; // Number of words rendered so far
   const currentChars = currentLines.join(""); // Chars currently rendered
-  const currentCharIndex = charGrades.length;
-  const currentChar = charsHistory[currentCharIndex];
   const firstCharIndex = charsHistory.length - currentChars.length; // Index of first char currently displayed
+
+  const currentCharIndex = charGrades.length; // Index of character that user is typing
+  const currentChar = charsHistory[currentCharIndex]; // Character that user is typing
 
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
