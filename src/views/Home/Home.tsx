@@ -28,31 +28,31 @@ export default function Home() {
   };
 
   const resetGame = () => {
-    setWords(getWords(mode, wordsPerPage));    
+    setWords(getWords(mode, chunkSize));
     setStartIndex(0);
     setCharGrades([]);
     setGameState("pre-game");
   };
 
+  // Load new set of words when user finishes typing current set of words
   const loadWords = () => {
-    setWords([...words, ...getWords(mode, wordsPerPage)]);
-    setStartIndex(startIndex + wordsPerPage);
+    setWords([...words, ...getWords(mode, chunkSize)]);
+    setStartIndex(startIndex + chunkSize);
   };
 
-  // When user selects different mode, load new set of words 
+  // When user selects different mode, load new set of words
   const updateMode = (mode: string) => {
     setMode(mode);
-    setWords(getWords(mode, wordsPerPage));
-  }
+    setWords(getWords(mode, chunkSize));
+  };
 
   const updateTimeLimit = (time: string) => {
     setTimeLimit(Number(time));
-  }
+  };
 
-  const linesPerPage = 4;
-  const wordsPerLine = 10; 
-  const wordsPerPage = 10;
-  const [words, setWords] = useState(getWords(mode, wordsPerPage));
+  const sampleLines = ['line one', 'line two', 'line three'];
+  const chunkSize = 100;
+  const [words, setWords] = useState(getWords(mode, chunkSize));
   const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);
 
@@ -87,8 +87,9 @@ export default function Home() {
         <GameWindow
           gameActive={gameState === "in-game"}
           startGame={startGame}
+          sampleLines={sampleLines}
           words={words}
-          wordsPerPage={wordsPerPage}
+          wordsPerPage={chunkSize}
           startIndex={startIndex}
           charGrades={charGrades}
           setCharGrades={setCharGrades}

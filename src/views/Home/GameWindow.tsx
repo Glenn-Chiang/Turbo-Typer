@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { getFirstLines, getLine } from "../../mechanics/getLine";
 
 type props = {
   gameActive: boolean;
   startGame: () => void;
+  sampleLines: string[];
   words: string[];
   wordsPerPage: number;
   startIndex: number;
@@ -15,19 +17,24 @@ export default function GameWindow({
   gameActive,
   startGame,
   words,
-  wordsPerPage,
-  startIndex: firstWordIndex,
   charGrades,
   setCharGrades,
-  loadWords
+  loadWords,
 }: props) {
-  
-  const chars = words.join(' ').split(''); // Array of all characters including spaces
-  const displayedWords = words.slice(firstWordIndex, firstWordIndex + wordsPerPage);
-  const displayedChars = displayedWords.join(' ').split('');
+  const maxCharsPerLine = 20;
+  const linesPerPage = 3;
+
+  const [linesHistory, setLinesHistory] = useState<string[]>(
+    getFirstLines(linesPerPage, words, maxCharsPerLine)
+  );
+  const [startLineIndex, setStartLineIndex] = useState(0);
+  const currentLines = linesHistory.slice(startLineIndex, startLineIndex + linesPerPage);
+  const charsHistory = linesHistory.join(""); // All chars rendered so far
+  const numWords = charsHistory.split(" ").length;
+  const currentChars = currentLines.join(""); // Chars currently rendered
   const currentCharIndex = charGrades.length;
-  const currentChar = chars[currentCharIndex];
-  const firstCharIndex = chars.length - displayedChars.length;
+  const currentChar = charsHistory[currentCharIndex];
+  const firstCharIndex = charsHistory.length - currentChars.length; // Index of first char currently displayed
 
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
@@ -49,17 +56,20 @@ export default function GameWindow({
         }
         setCharGrades(charGrades.slice(0, charGrades.length - 1));
 
-      // Correct
+        // Correct
       } else if (event.key === currentChar) {
         setCharGrades([...charGrades, 1]);
 
-      // Incorrect 
+        // Incorrect
       } else {
         setCharGrades([...charGrades, 0]);
       }
 
-      if (currentCharIndex === chars.length - 1) {
-        loadWords();
+      // Load new line of words when user types last character of first line
+      if (currentCharIndex === firstCharIndex + currentLines[0].length - 1) {
+        const nextLine = getLine(words, numWords, maxCharsPerLine);
+        setLinesHistory([...linesHistory, nextLine]);
+        setStartLineIndex(startLineIndex + 1);
       }
     };
 
@@ -67,26 +77,36 @@ export default function GameWindow({
     return () => window.removeEventListener("keydown", handleKeydown);
   }, [gameActive, currentCharIndex, currentChar, charGrades]);
 
-  const charSpans = displayedChars.map((char, index) => {
-    return (
-      <span
-        key={index}
-        className={
-          charGrades[index + firstCharIndex] === 1
-            ? "text-white underline"
-            : charGrades[index + firstCharIndex] === 0
-            ? "text-red-500 underline"
-            : "text-sky-400"
-        }
-      >
-        {char}
-      </span>
-    );
-  });
-
   return (
     <div className="w-4/6 bg-sky-800 text-xl p-4 rounded-xl">
-      {charSpans}
+      {currentLines.map((line, lineIndex) => {
+        const numPrevChars = currentLines.reduce(
+          (count, line, idx) => (idx < lineIndex ? count + line.length : count),
+          0
+        );
+        const charsInLine = line.split("");
+        return (
+          <p key={lineIndex}>
+            {charsInLine.map((char, index) => {
+              const charIndex = firstCharIndex + index + numPrevChars;
+              return (
+                <span
+                  key={index}
+                  className={
+                    charGrades[charIndex] === 1
+                      ? "text-white underline"
+                      : charGrades[charIndex] === 0
+                      ? "text-red-500 underline"
+                      : "text-sky-400"
+                  }
+                >
+                  {char}
+                </span>
+              );
+            })}
+          </p>
+        );
+      })}
     </div>
   );
 }
