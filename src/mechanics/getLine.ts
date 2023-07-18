@@ -3,7 +3,7 @@ export const getLine = (
   firstWordIndex: number,
   maxCharsPerLine: number
 ) => {
-  const currentWordSet = wordSet.slice(firstWordIndex);
+  const currentWordSet = wordSet.slice(firstWordIndex,);
   let charCount = 0;
   let charsInLine = "";
   for (const word of currentWordSet) {

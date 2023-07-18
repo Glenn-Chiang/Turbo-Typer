@@ -1,6 +1,5 @@
 import { faSignIn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink } from "react-router-dom";
 import AccountForm from "../../components/AccountForm";
 import LinkButton from "../../components/LinkButton";
 

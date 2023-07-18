@@ -49,16 +49,16 @@ export default function Home() {
     setWords([...words, ...getWords(mode, chunkSize)]);
     setStartIndex(startIndex + chunkSize);
   };
-
+  
   const chunkSize = 100;
   const [words, setWords] = useState(getWords(mode, chunkSize));
   const [startIndex, setStartIndex] = useState(0);
   const [charGrades, setCharGrades] = useState<number[]>([]);
-
-  if (charGrades.length >= words.join(' ').length / 2) {
+  
+  if (charGrades.length >= words.join(" ").length / 2) {
     loadWords();
   }
-
+  
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-white text-6xl p-12 flex gap-4 items-center">
@@ -91,6 +91,7 @@ export default function Home() {
         <GameWindow
           gameActive={gameState === "in-game"}
           startGame={startGame}
+          mode={mode}
           words={words}
           charGrades={charGrades}
           setCharGrades={setCharGrades}

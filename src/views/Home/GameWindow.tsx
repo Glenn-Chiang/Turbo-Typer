@@ -4,6 +4,7 @@ import { getFirstLines, getLine } from "../../mechanics/getLine";
 type props = {
   gameActive: boolean;
   startGame: () => void;
+  mode: string;
   words: string[];
   charGrades: number[];
   setCharGrades: React.Dispatch<React.SetStateAction<number[]>>;
@@ -12,6 +13,7 @@ type props = {
 export default function GameWindow({
   gameActive,
   startGame,
+  mode,
   words,
   charGrades,
   setCharGrades,
@@ -19,9 +21,14 @@ export default function GameWindow({
   const maxCharsPerLine = 50;
   const linesPerPage = 3;
 
-  const [linesHistory, setLinesHistory] = useState<string[]>( // All lines rendered so far
-    getFirstLines(linesPerPage, words, maxCharsPerLine)
-  );
+  const initialLines = getFirstLines(linesPerPage, words, maxCharsPerLine);
+  const [linesHistory, setLinesHistory] = useState<string[]>(initialLines); // All lines rendered so far
+
+  // Reload words when user changes mode
+  useEffect(() => {
+    setLinesHistory(initialLines);
+  }, [mode]);
+
   const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
   const currentLines = linesHistory.slice(
     startLineIndex,
