@@ -10,5 +10,8 @@
     h1 {
         @apply text-4xl flex justify-center items-center gap-3 p-4;
     }
+    button {
+        @apply transition;
+    }
 }
 
