@@ -32,7 +32,7 @@ export default function Login() {
   ];
 
   return (
-    <AccountForm action="login" fields={fields} handleSubmit={login}>
+    <AccountForm action="login" fields={fields}>
       <h1>
         <FontAwesomeIcon icon={faSignIn}/>
         Login
@@ -42,13 +42,3 @@ export default function Login() {
   )
 }
 
-async function login(email: string, password: string) {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    alert('Login successful');
-    return <Navigate to={'/play'}/>;
-  } catch (error) {
-    console.log('Login error: ', error);
-    throw error;
-  }
-}

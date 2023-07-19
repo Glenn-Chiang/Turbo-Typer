@@ -6,14 +6,12 @@ type props = {
   children: React.ReactNode[];
   action: string;
   fields: JSX.Element[][];
-  handleSubmit: (email: string, password: string) => Promise<Response>;
 };
 
 export default function AccountForm({
   children,
   action,
   fields,
-  handleSubmit,
 }: props) {
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -26,21 +24,9 @@ export default function AccountForm({
     );
   });
 
-  const onSubmit = async (event: FormEvent) => {
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
-    try {
-      await handleSubmit(email, password);
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
-  };
-
   return (
-    <Form
+    <Form method="post"
       className="flex flex-col items-center gap-4"
-      onSubmit={() => onSubmit}
     >
       {children[0]}
       <div className="flex flex-col gap-4 w-80">{fieldElems}</div>
