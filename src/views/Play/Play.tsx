@@ -29,7 +29,7 @@ export default function Play() {
   };
 
   const resetGame = () => {
-    setWords(getWords(mode, chunkSize));
+    setWords(getWords(mode, wordsPerChunk));
     setStartLineIndex(0);
     setLinesHistory(initialLines);
     setCharGrades([]);
@@ -38,8 +38,10 @@ export default function Play() {
 
   // When user selects different mode, load new set of words
   const updateMode = (mode: string) => {
-    setMode(mode);
-    setWords(getWords(mode, chunkSize));
+    setMode(mode); 
+    const newWords = getWords(mode, wordsPerChunk);
+    setWords(newWords);
+    const initialLines = getFirstLines(linesPerPage, newWords, maxCharsPerLine);
     setLinesHistory(initialLines);
   };
 
@@ -47,8 +49,8 @@ export default function Play() {
     setTimeLimit(Number(time));
   };
 
-  const chunkSize = 100;
-  const [words, setWords] = useState(getWords(mode, chunkSize));
+  const wordsPerChunk = 100;
+  const [words, setWords] = useState(getWords(mode, wordsPerChunk));
   const [charGrades, setCharGrades] = useState<number[]>([]);
 
   const maxCharsPerLine = 50;
@@ -74,7 +76,7 @@ export default function Play() {
 
   // Load next chunk of words
   if (charGrades.length >= words.join(" ").length / 2) {
-    setWords([...words, ...getWords(mode, chunkSize)]);
+    setWords([...words, ...getWords(mode, wordsPerChunk)]);
   }
 
   return (
@@ -104,7 +106,7 @@ export default function Play() {
       </div>
 
       {gameState === "post-game" ? (
-        <Result charGrades={charGrades} timeLimit={Number(timeLimit)} />
+        <Result charGrades={charGrades} mode={mode} timeLimit={Number(timeLimit)} />
       ) : (
         <GameWindow
           gameActive={gameState === "in-game"}
