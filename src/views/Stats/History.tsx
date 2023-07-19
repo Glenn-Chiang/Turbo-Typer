@@ -82,7 +82,7 @@ export default function History({ scores }: { scores: score[] | [] }) {
   ); // Sort most recent to least recent
   const [startIndex, setStartIndex] = useState(0);
   const scoresPerPage = 10;
-  const numPages = Math.ceil(sortedScores.length / scoresPerPage);
+  const numPages = sortedScores.length > 0 ? Math.ceil(sortedScores.length / scoresPerPage) : 1;
   const currentPage = startIndex / scoresPerPage + 1;
   const currentScores = sortedScores.slice(
     startIndex,
