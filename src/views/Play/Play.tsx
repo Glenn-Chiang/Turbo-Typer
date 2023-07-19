@@ -1,7 +1,4 @@
-import {
-  faBoltLightning,
-  faKeyboard,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBoltLightning, faKeyboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Settings from "./Settings.js";
 import { useState } from "react";
@@ -38,7 +35,7 @@ export default function Play() {
 
   // When user selects different mode, load new set of words
   const updateMode = (mode: string) => {
-    setMode(mode); 
+    setMode(mode);
     const newWords = getWords(mode, wordsPerChunk);
     setWords(newWords);
     const initialLines = getFirstLines(linesPerPage, newWords, maxCharsPerLine);
@@ -58,9 +55,9 @@ export default function Play() {
 
   const initialLines = getFirstLines(linesPerPage, words, maxCharsPerLine);
   const [linesHistory, setLinesHistory] = useState<string[]>(initialLines); // All lines rendered so far
-  const charsHistory = linesHistory.join("")
+  const charsHistory = linesHistory.join("");
   const numWords = charsHistory.split(" ").length;
-  
+
   const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
 
   const currentLines = linesHistory.slice(
@@ -100,13 +97,18 @@ export default function Play() {
       <div className="h-20">
         {gameState === "pre-game" ? (
           <p className="p-4">Start typing to begin</p>
-        ) : (
+        ) : gameState === "in-game" ? (
           <RestartButton onClick={resetGame} />
-        )}
+        ) : null}
       </div>
 
       {gameState === "post-game" ? (
-        <Result charGrades={charGrades} mode={mode} timeLimit={Number(timeLimit)} />
+        <Result
+          charGrades={charGrades}
+          mode={mode}
+          timeLimit={Number(timeLimit)}
+          playAgain={resetGame}
+        />
       ) : (
         <GameWindow
           gameActive={gameState === "in-game"}

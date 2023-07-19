@@ -12,6 +12,16 @@ import Logout from './views/Logout/Logout.tsx'
 import register from './views/Register/register.ts'
 import login from './views/Login/login.ts'
 import logout from './views/Logout/logout.ts'
+// import {useContext} from 'react'
+// import { AuthContext } from './AuthContext.ts'
+
+// function PrivateRoute({children}: {children: React.ReactNode}) {
+//   const user = useContext(AuthContext);
+//   if (!user) {
+//     return <Navigate to={'/login'}/>
+//   }
+//   return children;
+// }
 
 const router = createBrowserRouter([
   {

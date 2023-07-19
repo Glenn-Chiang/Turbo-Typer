@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Form } from "react-router-dom";
-import AccountButton from "./AccountButton";
+import SubmitButton from "./AccountButton";
 
 type props = {
   children: React.ReactNode[];
@@ -30,7 +30,7 @@ export default function AccountForm({
     >
       {children[0]}
       <div className="flex flex-col gap-4 w-80">{fieldElems}</div>
-      <AccountButton>{action}</AccountButton>
+      <SubmitButton>{action}</SubmitButton>
       {children[1]}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
     </Form>
