@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import saveScore from "../../crud/saveScore";
 import { AuthContext } from "../../AuthContext";
 import SubmitButton from "../../components/AccountButton";

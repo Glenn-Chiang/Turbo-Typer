@@ -88,11 +88,13 @@ export default function Play() {
         updateMode={updateMode}
         updateTimeLimit={updateTimeLimit}
       />
-      <Timer
-        gameActive={gameState === "in-game"}
-        endGame={endGame}
-        timeLimit={Number(timeLimit)}
-      />
+      {gameState !== "post-game" && (
+        <Timer
+          gameActive={gameState === "in-game"}
+          endGame={endGame}
+          timeLimit={Number(timeLimit)}
+        />
+      )}
 
       <div className="h-20">
         {gameState === "pre-game" ? (

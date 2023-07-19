@@ -12,6 +12,7 @@ import Logout from './views/Logout/Logout.tsx'
 import register from './views/Register/register.ts'
 import login from './views/Login/login.ts'
 import logout from './views/Logout/logout.ts'
+import statsLoader from './views/Stats/statsLoader.ts'
 // import {useContext} from 'react'
 // import { AuthContext } from './AuthContext.ts'
 
@@ -39,6 +40,11 @@ const router = createBrowserRouter([
       {
         path: '/stats',
         element: <Stats/>
+      },
+      {
+        path: '/stats/:userId',
+        element: <Stats/>,
+        loader: statsLoader
       },
       {
         path: '/settings',

@@ -4,9 +4,12 @@ import { modes, timeLimits } from "../../constants/parameters";
 import SettingButton from "./SettingButton";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../AuthContext";
+import { useLoaderData } from "react-router-dom";
 
 export default function Stats() {
   const user = useContext(AuthContext);
+
+  const scores = useLoaderData();
 
   return (
     <div className="flex flex-col items-center">
