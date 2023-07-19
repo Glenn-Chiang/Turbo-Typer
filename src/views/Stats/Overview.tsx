@@ -68,13 +68,13 @@ export default function Overview({ scores }: { scores: score[] | [] }) {
         <div className="flex flex-col gap-3 items-center">{timeButtons}</div>
       </div>
       <div className="row-span-2 flex flex-col justify-center w-1/2 flex-1">
-        <span className="text-2xl">
+        <span className="text-2xl flex justify-center items-center gap-4">
           <FontAwesomeIcon icon={faTrophy} />
           HIGH SCORE
         </span>
-        <span className="text-4xl text-cyan-400">{highScore}</span>
+        <span className="text-4xl text-cyan-400">{highScore} WPM</span>
         <span>Average Score</span>
-        <span className="text-2xl text-cyan-400">{averageScore}</span>
+        <span className="text-2xl text-cyan-400">{averageScore} WPM</span>
       </div>
     </div>
   );
