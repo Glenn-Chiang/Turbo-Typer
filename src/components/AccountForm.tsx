@@ -1,28 +1,52 @@
-import { Form } from "react-router-dom"
+import { FormEvent, useState } from "react";
+import { Form } from "react-router-dom";
+import AccountButton from "./AccountButton";
 
 type props = {
   children: React.ReactNode[];
   action: string;
-}
+  fields: JSX.Element[][];
+  handleSubmit: (email: string, password: string) => Promise<Response>;
+};
 
-export default function AccountForm({children, action}: props) {
-  return (
-    <Form className="flex flex-col items-center gap-4">
-      {children[0]}
-      <div className="flex flex-col gap-4 w-80">
-        <div className="flex justify-between gap-4">
-          <label htmlFor="email">Email</label>
-          <input required id="email" type="email" name="email" className="rounded-lg text-black p-1"/>
-        </div>
-        <div className="flex justify-between gap-4">
-          <label htmlFor="password">Password</label>
-          <input required id="password" type="password" name="password" className="rounded-lg text-black p-1"/>
-        </div>
+export default function AccountForm({
+  children,
+  action,
+  fields,
+  handleSubmit,
+}: props) {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const fieldElems = fields.map((field, index) => {
+    return (
+      <div className="flex justify-between gap-4" key={index}>
+        {field[0]}
+        {field[1]}
       </div>
-      <button className="bg-rose-500 hover:bg-rose-400 transition p-2 rounded-xl capitalize">
-        {action}
-      </button>
+    );
+  });
+
+  const onSubmit = async (event: FormEvent) => {
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    try {
+      await handleSubmit(email, password);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  return (
+    <Form
+      className="flex flex-col items-center gap-4"
+      onSubmit={() => onSubmit}
+    >
+      {children[0]}
+      <div className="flex flex-col gap-4 w-80">{fieldElems}</div>
+      <AccountButton>{action}</AccountButton>
       {children[1]}
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
     </Form>
-  )
+  );
 }

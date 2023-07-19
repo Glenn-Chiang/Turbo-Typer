@@ -8,6 +8,7 @@ import Stats from './views/Stats/Stats.tsx'
 import Login from './views/Login/Login.tsx'
 import Register from './views/Register/Register.tsx'
 import Settings from './views/Settings/Settings.tsx'
+import Logout from './views/Logout.tsx'
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <Register/>
+        element: <Register/>,
+      },
+      {
+        path: '/logout',
+        element: <Logout/>
       }
     ]
   }
