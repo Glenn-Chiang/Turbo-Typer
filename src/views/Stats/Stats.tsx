@@ -2,16 +2,19 @@ import { faBarsProgress, faClock, faLineChart, faTrophy } from "@fortawesome/fre
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { modes, timeLimits } from "../../constants/parameters";
 import SettingButton from "./SettingButton";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../AuthContext";
 
 export default function Stats() {
+  const user = useContext(AuthContext);
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-4xl flex gap-3 items-center p-4">
         <FontAwesomeIcon icon={faLineChart}/>
         Stats
       </h1>
-      <Overview/>
+      {user ? <Overview/> : <p>Sign in to view your stats</p>}
     </div>
   )
 }

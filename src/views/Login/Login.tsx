@@ -2,9 +2,7 @@ import { faSignIn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AccountForm from "../../components/AccountForm";
 import LinkButton from "../../components/LinkButton";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
-import { Navigate } from "react-router-dom";
+import { useActionData } from "react-router-dom";
 
 export default function Login() {
   const fields = [
@@ -31,14 +29,20 @@ export default function Login() {
     ],
   ];
 
-  return (
-    <AccountForm action="login" fields={fields}>
-      <h1>
-        <FontAwesomeIcon icon={faSignIn}/>
-        Login
-      </h1>
-      <p>Don't have an account? <LinkButton destination="register"/></p>
-    </AccountForm>
-  )
-}
+  const error = useActionData() as string;
 
+  return (
+    <>
+      <AccountForm action="login" fields={fields}>
+        <h1>
+          <FontAwesomeIcon icon={faSignIn} />
+          Login
+        </h1>
+        <p>
+          Don't have an account? <LinkButton destination="register" />
+        </p>
+      </AccountForm>
+      {error && <p className="p-4 text-red-500">{error}</p>}
+    </>
+  );
+}

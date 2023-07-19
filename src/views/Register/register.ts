@@ -18,9 +18,12 @@ export default async function register({ request }: { request: Request }) {
     await setUpUser(username, userCredential.user.uid);
     console.log("Registration successful");
     return redirect("/login");
+
   } catch (error) {
-    console.log("Registration error: ", error);
-    throw error;
+    if (error instanceof Error) {
+      console.log("Registration error: ", error);
+      return error.message;
+    }
   }
 }
 

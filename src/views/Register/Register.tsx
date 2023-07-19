@@ -2,6 +2,7 @@ import AccountForm from "../../components/AccountForm";
 import LinkButton from "../../components/LinkButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
+import { useActionData } from "react-router-dom";
 
 export default function Register() {
   const fields = [
@@ -38,16 +39,21 @@ export default function Register() {
     ],
   ];
 
+  const error = useActionData() as string;
+
   return (
-    <AccountForm action="register" fields={fields}>
-      <h1>
-        <FontAwesomeIcon icon={faPenSquare} />
-        Register
-      </h1>
-      <p>
-        Already have an account? <LinkButton destination="login" />
-      </p>
-    </AccountForm>
+    <>
+      <AccountForm action="register" fields={fields}>
+        <h1>
+          <FontAwesomeIcon icon={faPenSquare} />
+          Register
+        </h1>
+        <p>
+          Already have an account? <LinkButton destination="login" />
+        </p>
+      </AccountForm>
+      {error && <p className="p-4 text-red-500">{error}</p>}
+    </>
   );
 }
 

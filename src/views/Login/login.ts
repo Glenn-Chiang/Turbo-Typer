@@ -6,12 +6,15 @@ export default async function login({ request }: { request: Request }) {
   const formData = await request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-
+  
   try {
     await signInWithEmailAndPassword(auth, email, password);
     console.log("Login successful");
     return redirect("/play");
   } catch (error) {
-    console.log("Login error: ", error);
+    if (error instanceof Error) {
+      console.log("Login error: ", error);
+      return error.message;  
+    }
   }
 }
