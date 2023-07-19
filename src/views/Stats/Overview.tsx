@@ -37,8 +37,23 @@ export default function Overview({ scores }: { scores: score[] | [] }) {
     );
   });
 
-  const highScore = 102;
-  const averageScore = 98;
+  const filteredScores = scores.filter(
+    (score) => score.mode === selectedMode && score.timeLimit === selectedTime
+  );
+  const highScore = filteredScores.reduce(
+    (currentHighest, score) =>
+      score.wpm >= currentHighest ? score.wpm : currentHighest,
+    0
+  );
+  const averageScore =
+    filteredScores.length > 0
+      ? Math.round(
+          filteredScores.reduce(
+            (currentSum, score) => currentSum + score.wpm,
+            0
+          ) / filteredScores.length
+        )
+      : 0;
 
   return (
     <div className="w-4/6 bg-sky-950 p-4 rounded-xl flex gap-4">
