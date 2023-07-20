@@ -1,6 +1,6 @@
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 type props = {
   timeLimit: number;
@@ -26,7 +26,7 @@ export default function Timer({timeLimit, gameActive, endGame}: props) {
     }
 
     return () => clearInterval(timer);
-  }, [gameActive, timeLimit, timeLeft]);
+  }, [gameActive, timeLimit, timeLeft, endGame]);
 
   return (
     <div className="flex items-center gap-3 p-4 text-2xl">

@@ -1,4 +1,3 @@
-import { FormEvent, useState } from "react";
 import { Form } from "react-router-dom";
 import SubmitButton from "./AccountButton";
 
@@ -13,7 +12,6 @@ export default function AccountForm({
   action,
   fields,
 }: props) {
-  const [errorMessage, setErrorMessage] = useState("");
 
   const fieldElems = fields.map((field, index) => {
     return (
@@ -32,7 +30,6 @@ export default function AccountForm({
       <div className="flex flex-col gap-4 w-80">{fieldElems}</div>
       <SubmitButton>{action}</SubmitButton>
       {children[1]}
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
     </Form>
   );
 }

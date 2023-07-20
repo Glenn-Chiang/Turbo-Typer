@@ -52,8 +52,8 @@ export default function Result({
       <p>
         <span>{accuracy}%</span> Accuracy
       </p>
-      <div className="flex gap-4">
-        <SubmitButton onClick={handleSave}>Save score</SubmitButton>
+      <div className="flex gap-4 justify-center">
+        {user && <SubmitButton onClick={handleSave}>Save score</SubmitButton>}
         <button
           onClick={playAgain}
           className="bg-cyan-600 hover:bg-cyan-500 transition p-2 rounded-xl capitalize"
