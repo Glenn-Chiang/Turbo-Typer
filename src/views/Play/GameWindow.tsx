@@ -24,7 +24,7 @@ export default function GameWindow({
 
   const currentCharIndex = charGrades.length; // Index of character that user is typing
   const currentChar = charsHistory[currentCharIndex]; // Character that user is typing
-  
+
   const handleKeydown = useCallback(
     (event: KeyboardEvent) => {
       // Ignore keys that are neither a character nor backspace
@@ -43,15 +43,17 @@ export default function GameWindow({
         if (currentCharIndex === 0 || currentCharIndex === firstCharIndex) {
           return;
         }
-        setCharGrades(charGrades => charGrades.slice(0, charGrades.length - 1));
+        setCharGrades((charGrades) =>
+          charGrades.slice(0, charGrades.length - 1)
+        );
 
         // Correct
       } else if (event.key === currentChar) {
-        setCharGrades(charGrades => [...charGrades, 1]);
+        setCharGrades((charGrades) => [...charGrades, 1]);
 
         // Incorrect
       } else {
-        setCharGrades(charGrades => [...charGrades, 0]);
+        setCharGrades((charGrades) => [...charGrades, 0]);
       }
 
       // Load new line of words when user types last character of first line
