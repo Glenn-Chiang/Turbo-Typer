@@ -1,7 +1,7 @@
 import { faBoltLightning, faKeyboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Settings from "./Settings.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getWords } from "../../mechanics/getWords.js";
 import Timer from "./Timer.js";
 import GameWindow from "./GameWindow.js";
@@ -17,6 +17,14 @@ export default function Play() {
   const [mode, setMode] = useState(Object.keys(modes)[0]);
   const [timeLimit, setTimeLimit] = useState(timeLimits[0]);
 
+  const updateMode = (mode: string) => {
+    setMode(mode);
+  };
+
+  const updateTimeLimit = (time: string) => {
+    setTimeLimit(Number(time));
+  };
+
   const startGame = () => {
     setGameState("in-game");
   };
@@ -25,40 +33,35 @@ export default function Play() {
     setGameState("post-game");
   };
 
-  const resetGame = () => {
-    setWords(getWords(mode, wordsPerChunk));
-    setStartLineIndex(0);
-    setLinesHistory(initialLines);
-    setCharGrades([]);
+  const restartGame = () => {
     setGameState("pre-game");
+    resetGame(mode);
   };
 
-  // When user selects different mode, load new set of words
-  const updateMode = (mode: string) => {
-    setMode(mode);
+  const resetGame = (mode: string) => {
     const newWords = getWords(mode, wordsPerChunk);
     setWords(newWords);
     const initialLines = getFirstLines(linesPerPage, newWords, maxCharsPerLine);
     setLinesHistory(initialLines);
+    setStartLineIndex(0);
+    setCharGrades([]);
   };
 
-  const updateTimeLimit = (time: string) => {
-    setTimeLimit(Number(time));
-  };
+  useEffect(() => {
+    resetGame(mode);
+  }, [mode]);
 
   const wordsPerChunk = 100;
-  const [words, setWords] = useState(getWords(mode, wordsPerChunk));
-  const [charGrades, setCharGrades] = useState<number[]>([]);
-
   const maxCharsPerLine = 50;
   const linesPerPage = 3;
 
-  const initialLines = getFirstLines(linesPerPage, words, maxCharsPerLine);
-  const [linesHistory, setLinesHistory] = useState<string[]>(initialLines); // All lines rendered so far
+  const [words, setWords] = useState<string[]>([]);
+  const [linesHistory, setLinesHistory] = useState<string[]>([]); // All lines rendered so far
+  const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
+  const [charGrades, setCharGrades] = useState<number[]>([]);
+
   const charsHistory = linesHistory.join("");
   const numWords = charsHistory.split(" ").length;
-
-  const [startLineIndex, setStartLineIndex] = useState(0); // Index of first line currently rendered
 
   const currentLines = linesHistory.slice(
     startLineIndex,
@@ -100,7 +103,7 @@ export default function Play() {
         {gameState === "pre-game" ? (
           <p className="p-4">Start typing to begin</p>
         ) : gameState === "in-game" ? (
-          <RestartButton onClick={resetGame} />
+          <RestartButton onClick={restartGame} />
         ) : null}
       </div>
 
@@ -109,7 +112,7 @@ export default function Play() {
           charGrades={charGrades}
           mode={mode}
           timeLimit={Number(timeLimit)}
-          playAgain={resetGame}
+          playAgain={restartGame}
         />
       ) : (
         <GameWindow
